@@ -60,6 +60,12 @@ main{max-width:820px;margin:0 auto;padding:12px 12px 90px}
 .today b{color:var(--green2)}
 .place{margin-top:8px;padding-top:8px;border-top:1px dashed var(--line);font-size:13px;color:var(--muted)}
 .place select{font-size:14px;padding:4px 6px;border-radius:8px;border:1px solid var(--line);background:var(--card);color:var(--ink)}
+.find{display:flex;gap:6px;margin-top:8px}
+.find input{flex:1;min-width:0;font-size:16px;padding:8px 10px;border-radius:10px;border:1px solid var(--line);background:var(--card);color:var(--ink)}
+.find button{font-size:15px;font-weight:700;padding:8px 14px;border-radius:10px;border:0;background:var(--green2);color:#fff;cursor:pointer}
+.findmsg{font-size:13px;color:var(--muted);margin-top:4px;min-height:1em}
+.ayah.flash{background:#fff3c4;box-shadow:0 0 0 4px var(--gold)}
+@media (prefers-color-scheme:dark){ .ayah.flash{background:#3a3415} }
 .title{text-align:center;margin:6px 0 10px;background:var(--card);border:2px solid var(--gold);border-radius:12px;padding:4px 10px 10px}
 .title .a{font-family:"Scheherazade New","Amiri","Traditional Arabic",serif;font-size:34px;color:var(--green2);font-weight:700;direction:rtl}
 .title .n{font-size:14px;color:var(--muted)}
@@ -237,8 +243,41 @@ function renderToday(){
         (now.getDay() === 4 ? (JO ? " Bermula" : " Baca penuh bermula") + " selepas Maghrib (± " + magText + ")." : "")) +
     '<div class="place">Lokasi: <select id="place">' +
     Object.keys(PLACES).map(k => `<option value="${k}" ${k===placeId?"selected":""}>${PLACES[k].name}</option>`).join("") +
-    '</select> · Maghrib ± ' + magText + '</div>';
+    '</select> · Maghrib ± ' + magText + '</div>' +
+    '<div class="find"><input id="findBox" type="search" inputmode="search" autocomplete="off" placeholder="Cari ayat: 152 atau baqarah 152">' +
+    '<button id="findBtn">Pergi</button></div><div class="findmsg" id="findMsg"></div>';
+  $("findBtn").addEventListener("click", findAyah);
+  $("findBox").addEventListener("keydown", e => { if (e.key === "Enter") findAyah(); });
   $("place").addEventListener("change", e => { store.set("q_place", e.target.value); location.reload(); });
+}
+
+// ---- search: "152" jumps inside the open tab, "baqarah 152" opens that surah first
+const norm = t => t.toLowerCase().replace(/\b(al|ar|at|as|ali)[- ]/g, "").replace(/[^a-z]/g, "");
+function findAyah(){
+  const q = $("findBox").value.trim();
+  const num = (q.match(/(\d+)\s*$/) || [])[1];
+  const name = norm(q.replace(/\d+\s*$/, ""));
+  const say = t => { const m = $("findMsg"); if (m) m.textContent = t; };
+  if (!q) return;
+  // every (tab, part) that fits the name; with no name, only the open tab
+  let hits = [];
+  SURAHS.forEach(s => s.parts.forEach((p, pi) => {
+    const nameOk = !name ? s.id === current
+      : norm(s.name).includes(name) || s.id.includes(name) || norm(p.title.split("–")[0]).includes(name);
+    if (nameOk) hits.push({ s, pi, has: !num || p.v.some(v => v[0] == num) });
+  }));
+  if (!hits.length) return say("Surah \"" + q.replace(/\d+\s*$/, "").trim() + "\" tiada dalam senarai ini.");
+  const hit = hits.find(h => h.has);
+  if (!hit) return say("Ayat " + num + " tiada dalam " + hits[0].s.name + " di sini.");
+  if (hit.s.id !== current) { current = hit.s.id; store.set("q_surah", current); renderAll(false); $("findBox").value = q; }
+  const el = num ? $("a" + hit.pi + "_" + num) : document.querySelector(".title");
+  if (!el) return;
+  // put the ayah just under the sticky header
+  const top = el.getBoundingClientRect().top + window.scrollY - document.querySelector("header").offsetHeight - 10;
+  window.scrollTo({ top: Math.max(0, top), behavior: "auto" });
+  if (num) { el.classList.add("flash"); setTimeout(() => el.classList.remove("flash"), 2500); }
+  $("findBox").blur();
+  say(num ? hit.s.name + " – ayat " + num : hit.s.name);
 }
 
 function renderSurah(){
