@@ -12,7 +12,7 @@
 :root{
   --bg:#f6f1e1; --card:#fffdf4; --line:#1b7a4c; --ink:#14201a; --muted:#5d6b63;
   --green:#0f5b3a; --green2:#157a4e; --latin:#0b7f74; --gold:#c9a23a; --soft:#e7f1e6;
-  --ar:38px; --la:28px;
+  --ar:32px; --la:23px;
   --carpet:url("data:image/svg+xml,%3Csvg xmlns=%22http://www.w3.org/2000/svg%22 width=%22120%22 height=%22120%22 viewBox=%220 0 120 120%22%3E%3Crect width=%22120%22 height=%22120%22 fill=%22%234f9a72%22/%3E%3Cg fill=%22none%22 stroke=%22%237cc09a%22 stroke-width=%221.6%22%3E%3Cpath d=%22M60 4 L116 60 L60 116 L4 60 Z%22/%3E%3Cpath d=%22M60 18 C74 32 88 46 102 60 C88 74 74 88 60 102 C46 88 32 74 18 60 C32 46 46 32 60 18 Z%22 stroke=%22%233c8560%22 stroke-width=%221%22/%3E%3Cpath d=%22M0 0 C14 8 22 8 30 0 M90 0 C98 8 106 8 120 0 M0 120 C14 112 22 112 30 120 M90 120 C98 112 106 112 120 120%22/%3E%3C/g%3E%3Cg fill=%22%237cc09a%22%3E%3Cg id=%22p%22%3E%3Cpath d=%22M60 60 C52 50 52 40 60 32 C68 40 68 50 60 60 Z%22/%3E%3C/g%3E%3Cpath d=%22M60 60 C52 50 52 40 60 32 C68 40 68 50 60 60 Z%22 transform=%22rotate%2890 60 60%29%22/%3E%3Cpath d=%22M60 60 C52 50 52 40 60 32 C68 40 68 50 60 60 Z%22 transform=%22rotate%28180 60 60%29%22/%3E%3Cpath d=%22M60 60 C52 50 52 40 60 32 C68 40 68 50 60 60 Z%22 transform=%22rotate%28270 60 60%29%22/%3E%3C/g%3E%3Cg fill=%22%233c8560%22%3E%3Cpath d=%22M60 60 C56 52 58 46 60 42 C62 46 64 52 60 60 Z%22 transform=%22rotate%2845 60 60%29%22/%3E%3Cpath d=%22M60 60 C56 52 58 46 60 42 C62 46 64 52 60 60 Z%22 transform=%22rotate%28135 60 60%29%22/%3E%3Cpath d=%22M60 60 C56 52 58 46 60 42 C62 46 64 52 60 60 Z%22 transform=%22rotate%28225 60 60%29%22/%3E%3Cpath d=%22M60 60 C56 52 58 46 60 42 C62 46 64 52 60 60 Z%22 transform=%22rotate%28315 60 60%29%22/%3E%3C/g%3E%3Ccircle cx=%2260%22 cy=%2260%22 r=%225%22 fill=%22%23efe7c4%22/%3E%3Cg fill=%22%23efe7c4%22%3E%3Ccircle cx=%2260%22 cy=%224%22 r=%222.5%22/%3E%3Ccircle cx=%2260%22 cy=%22116%22 r=%222.5%22/%3E%3Ccircle cx=%224%22 cy=%2260%22 r=%222.5%22/%3E%3Ccircle cx=%22116%22 cy=%2260%22 r=%222.5%22/%3E%3C/g%3E%3Cg fill=%22%237cc09a%22%3E%3Ccircle cx=%220%22 cy=%220%22 r=%227%22/%3E%3Ccircle cx=%22120%22 cy=%220%22 r=%227%22/%3E%3Ccircle cx=%220%22 cy=%22120%22 r=%227%22/%3E%3Ccircle cx=%22120%22 cy=%22120%22 r=%227%22/%3E%3C/g%3E%3Cg fill=%22%23efe7c4%22%3E%3Ccircle cx=%220%22 cy=%220%22 r=%222.5%22/%3E%3Ccircle cx=%22120%22 cy=%220%22 r=%222.5%22/%3E%3Ccircle cx=%220%22 cy=%22120%22 r=%222.5%22/%3E%3Ccircle cx=%22120%22 cy=%22120%22 r=%222.5%22/%3E%3C/g%3E%3C/svg%3E");
 }
 @media (prefers-color-scheme:dark){
@@ -143,8 +143,8 @@ const BULAN = ["Jan","Feb","Mac","Apr","Mei","Jun","Jul","Ogos","Sep","Okt","Nov
 
 // ---- state
 let current = store.get("q_surah", "mulk");
-let arSize  = store.get("q_ar", 38);
-let laSize  = store.get("q_la2", 28);          // Latin size, separate from Arabic
+let arSize  = store.get("q_ar", 32);
+let laSize  = store.get("q_la2", 23);          // Latin size, separate from Arabic
 let mode    = store.get("q_mode", "both");      // both | latin | arab
 let doneMap = store.get("q_done", {});           // { dayKey: {mulk:true,...} }
 if (!doneMap[dayKey]) doneMap = { [dayKey]: {}, kahfi: doneMap.kahfi }; // reset every new day
