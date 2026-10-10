@@ -342,6 +342,22 @@ $("date").textContent = HARI[now.getDay()] + ", " + now.getDate() + " " + BULAN[
 store.set("q_done", doneMap);
 applySettings();
 renderAll(true);
+
+// ---- new-day refresh
+// The date, Maghrib time and Jumaat status are worked out when the page loads. A phone keeps the page
+// open in the background for days (especially from a home-screen icon), so without this the ticks and
+// "Bacaan hari ini" stayed on the old day. Re-check whenever the page is shown again, and once a minute.
+function freshCheck(){
+  const n = new Date();
+  const key = n.getFullYear() + "-" + (n.getMonth()+1) + "-" + n.getDate();
+  const m = maghrib(n);
+  const fri = (n.getDay() === 4 && n >= m) || (n.getDay() === 5 && n < m);
+  if (key !== dayKey || fri !== isFriday) location.reload();
+}
+document.addEventListener("visibilitychange", () => { if (!document.hidden) freshCheck(); });
+window.addEventListener("pageshow", freshCheck);
+window.addEventListener("focus", freshCheck);
+setInterval(freshCheck, 60000);
 </script>
 </body>
 </html>
